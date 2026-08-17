@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tola Gram Converter</title>
+  <style>
+    :root {
+      /* Tola section colors */
+      --tola-bg: #fffdf5;
+      --tola-border: #f3e5be;
+      --tola-header-bg: #d9932b;
+      --tola-btn-bg: #c9851f;
+      --tola-btn-hover: #b37418;
+      --tola-accent-bg: #fdf5e6;
+      --tola-text: #4a3810;
+
+      /* Gram section colors */
+      --gram-bg: #f7faf8;
+      --gram-border: #d4e7dd;
+      --gram-header-bg: #2d734e;
+      --gram-btn-bg: #2c6e49;
+      --gram-btn-hover: #22573a;
+      --gram-accent-bg: #edf5f0;
+      --gram-text: #1b3d2b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #f5f2eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .converter-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
+      align-items: center;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    /* Central Swap Icon */
+    .swap-divider {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px;
+      height: 48px;
+      background: #ffffff;
+      border: 1px solid #e2cb98;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      z-index: 10;
+      color: #b37a24;
+      font-size: 20px;
+    }
+
+    /* Converter Card Base */
+    .card {
+      flex: 1;
+      border-radius: 16px;
+      padding: 28px 24px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    }
+
+    .card-tola {
+      background-color: var(--tola-bg);
+      border: 1.5px solid var(--tola-border);
+    }
+
+    .card-gram {
+      background-color: var(--gram-bg);
+      border: 1.5px solid var(--gram-border);
+    }
+
+    /* Header Section */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .icon-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+    }
+
+    .card-tola .icon-badge { background-color: var(--tola-header-bg); }
+    .card-gram .icon-badge { background-color: var(--gram-header-bg); }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .card-tola .card-title { color: var(--tola-text); }
+    .card-gram .card-title { color: var(--gram-text); }
+
+    /* Form Elements */
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .label {
+      display: block;
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .input-box {
+      display: flex;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .card-tola .input-box { border: 1px solid #e0d8c3; }
+    .card-gram .input-box { border: 1px solid #cadbcf; }
+
+    .input-box input {
+      flex: 1;
+      border: none;
+      padding: 12px 14px;
+      font-size: 1.1rem;
+      outline: none;
+      color: #333;
+    }
+
+    .input-box input::placeholder {
+      color: #aaa;
+    }
+
+    .unit-select {
+      background: #ffffff;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .card-tola .unit-select {
+      border-left: 1px solid #e0d8c3;
+      color: var(--tola-text);
+    }
+
+    .card-gram .unit-select {
+      border-left: 1px solid #cadbcf;
+      color: var(--gram-text);
+    }
+
+    /* Result Box */
+    .result-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .card-tola .result-box {
+      background-color: var(--tola-accent-bg);
+      border: 1px solid #faebcc;
+      color: #222;
+    }
+
+    .card-gram .result-box {
+      background-color: var(--gram-accent-bg);
+      border: 1px solid #d0e6d8;
+      color: #222;
+    }
+
+    .result-unit {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: background 0.2s ease;
+    }
+
+    .card-tola .btn { background-color: var(--tola-btn-bg); }
+    .card-tola .btn:hover { background-color: var(--tola-btn-hover); }
+
+    .card-gram .btn { background-color: var(--gram-btn-bg); }
+    .card-gram .btn:hover { background-color: var(--gram-btn-hover); }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .converter-wrapper {
+        flex-direction: column;
+      }
+      .swap-divider {
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: none;
+        margin: -8px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="converter-wrapper">
+    
+    <!-- Left Section: Tola to Gram -->
+    <div class="card card-tola">
+      <div class="card-header">
+        <div class="icon-badge">
+          <!-- Scale Icon -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h18"/></svg>
+        </div>
+        <h2 class="card-title">तोला बाट ग्राम</h2>
+      </div>
+
+      <div class="field-group">
+        <label class="label">तोलामा मूल्य प्रविष्ट गर्नुहोस्</label>
+        <div class="input-box">
+          <input type="number" id="tolaInput" placeholder="उदाहरण: 1" step="any" min="0">
+          <div class="unit-select">
+            तोला <span>&#9662;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="label">ग्राममा परिणाम</label>
+        <div class="result-box">
+          <span id="gramResult">0.0000</span>
+          <span class="result-unit">ग्राम</span>
+        </div>
+      </div>
+
+      <button class="btn" onclick="convertTolaToGram()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
+        कन्भर्ट गर्नुहोस्
+      </button>
+    </div>
+
+    <!-- Center Swap Icon -->
+    <div class="swap-divider">
+      &#8646;
+    </div>
+
+    <!-- Right Section: Gram to Tola -->
+    <div class="card card-gram">
+      <div class="card-header">
+        <div class="icon-badge">
+          <!-- Weight Icon -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.9 2.6l2 9A2 2 0 0 0 8.5 21h7a2 2 0 0 0 1.9-1.4l2-9A2 2 0 0 0 17.5 8z"/></svg>
+        </div>
+        <h2 class="card-title">ग्राम बाट तोला</h2>
+      </div>
+
+      <div class="field-group">
+        <label class="label">ग्राममा मूल्य प्रविष्ट गर्नुहोस्</label>
+        <div class="input-box">
+          <input type="number" id="gramInput" placeholder="उदाहरण: 10" step="any" min="0">
+          <div class="unit-select">
+            ग्राम <span>&#9662;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="label">तोलामा परिणाम</label>
+        <div class="result-box">
+          <span id="tolaResult">0.0000</span>
+          <span class="result-unit">तोलामा</span>
+        </div>
+      </div>
+
+      <button class="btn" onclick="convertGramToTola()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
+        कन्भर्ट गर्नुहोस्
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const CONVERSION_RATE = 11.664; // 1 tola = 11.664 grams
+
+    const tolaInput = document.getElementById('tolaInput');
+    const gramResult = document.getElementById('gramResult');
+    const gramInput = document.getElementById('gramInput');
+    const tolaResult = document.getElementById('tolaResult');
+
+    function convertTolaToGram() {
+      const value = parseFloat(tolaInput.value);
+      if (isNaN(value) || value <= 0) {
+        gramResult.textContent = '0.0000';
+      } else {
+        gramResult.textContent = (value * CONVERSION_RATE).toFixed(4);
+      }
+    }
+
+    function convertGramToTola() {
+      const value = parseFloat(gramInput.value);
+      if (isNaN(value) || value <= 0) {
+        tolaResult.textContent = '0.0000';
+      } else {
+        tolaResult.textContent = (value / CONVERSION_RATE).toFixed(4);
+      }
+    }
+
+    // Real-time dynamic updates on typing
+    tolaInput.addEventListener('input', convertTolaToGram);
+    gramInput.addEventListener('input', convertGramToTola);
+  </script>
+</body>
+</html>
