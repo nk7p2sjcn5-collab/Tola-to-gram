@@ -268,7 +268,7 @@
       <div class="field-group">
         <label class="label">ग्राममा परिणाम</label>
         <div class="result-box">
-          <span id="gramResult">0.0000</span>
+          <span id="gramResult">0.000</span>
           <span class="result-unit">ग्राम</span>
         </div>
       </div>
@@ -307,7 +307,7 @@
       <div class="field-group">
         <label class="label">तोलामा परिणाम</label>
         <div class="result-box">
-          <span id="tolaResult">0.0000</span>
+          <span id="tolaResult">0.000</span>
           <span class="result-unit">तोलामा</span>
         </div>
       </div>
@@ -331,18 +331,18 @@
     function convertTolaToGram() {
       const value = parseFloat(tolaInput.value);
       if (isNaN(value) || value <= 0) {
-        gramResult.textContent = '0.0000';
+        gramResult.textContent = '0.000';
       } else {
-        gramResult.textContent = (value * CONVERSION_RATE).toFixed(4);
+        gramResult.textContent = (value * CONVERSION_RATE).toFixed(3);
       }
     }
 
     function convertGramToTola() {
       const value = parseFloat(gramInput.value);
       if (isNaN(value) || value <= 0) {
-        tolaResult.textContent = '0.0000';
+        tolaResult.textContent = '0.000';
       } else {
-        tolaResult.textContent = (value / CONVERSION_RATE).toFixed(4);
+        tolaResult.textContent = (value / CONVERSION_RATE).toFixed(3);
       }
     }
 
