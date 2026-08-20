@@ -49,15 +49,15 @@
     /* Top Tab Navigation Buttons */
     .nav-tabs {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 20px;
       width: 100%;
     }
 
     .tab-btn {
       flex: 1;
-      padding: 12px 10px;
-      font-size: 0.95rem;
+      padding: 14px 12px;
+      font-size: 1rem;
       font-weight: 700;
       border: 1.5px solid #dcd3be;
       background-color: #ffffff;
@@ -84,7 +84,7 @@
       display: block;
     }
 
-    /* Converter 1 Layout */
+    /* Converter Layout */
     .converter-wrapper {
       position: relative;
       display: flex;
@@ -113,7 +113,7 @@
       font-size: 20px;
     }
 
-    /* Converter Card Base */
+    /* Card Base */
     .card {
       flex: 1;
       border-radius: 16px;
@@ -182,7 +182,7 @@
     .card-tola .input-box { border: 1px solid #e0d8c3; }
     .card-gram .input-box { border: 1px solid #cadbcf; }
 
-    .input-box input, .input-box select {
+    .input-box input {
       flex: 1;
       border: none;
       padding: 12px 14px;
@@ -319,13 +319,10 @@
 
   <div class="app-container">
     
-    <!-- Option Selector Buttons -->
+    <!-- Navigation Tabs -->
     <div class="nav-tabs">
       <button class="tab-btn active" onclick="switchTab('tolaGramTab', this)">
         ⚖️ तोला - ग्राम कन्भर्टर
-      </button>
-      <button class="tab-btn" onclick="switchTab('purityTab', this)">
-        ✨ प्युरिटी क्याल्कुलेटर
       </button>
       <button class="tab-btn" onclick="switchTab('karatChartTab', this)">
         📋 क्यारेट चार्ट (Karat Chart)
@@ -348,7 +345,7 @@
             <label class="label">तोलामा मूल्य प्रविष्ट गर्नुहोस्</label>
             <div class="input-box">
               <input type="number" id="tolaInput" placeholder="उदाहरण: 1" step="any" min="0">
-              <div class="unit-select">тоला <span>&#9662;</span></div>
+              <div class="unit-select">तोला <span>&#9662;</span></div>
             </div>
           </div>
 
@@ -395,49 +392,7 @@
       </div>
     </div>
 
-    <!-- OPTION 2: Purity Calculator Box -->
-    <div id="purityTab" class="tab-content">
-      <div class="card card-tola" style="max-width: 550px; margin: 0 auto;">
-        <div class="card-header">
-          <div class="icon-badge">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <h2 class="card-title">शुद्धता (Purity) क्याल्कुलेटर</h2>
-        </div>
-
-        <div class="field-group">
-          <label class="label">कुल तौल (Total Weight)</label>
-          <div class="input-box">
-            <input type="number" id="purityWeightInput" placeholder="उदाहरण: 10" step="any" min="0">
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="label">क्यारेट छान्नुहोस् (Select Karat)</label>
-          <div class="input-box">
-            <select id="purityKaratSelect" onchange="calculatePurity()">
-              <option value="24">24K (99.9%)</option>
-              <option value="23">23K (95.8%)</option>
-              <option value="22" selected>22K (91.6%)</option>
-              <option value="18">18K (75.0%)</option>
-              <option value="14">14K (58.3%)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="label">शुद्ध सुनको तौल (Pure 24K Gold)</label>
-          <div class="result-box">
-            <span id="pureGoldResult">0.000</span>
-            <span class="result-unit">तौल</span>
-          </div>
-        </div>
-
-        <button class="btn" onclick="calculatePurity()">हिसाब गर्नुहोस्</button>
-      </div>
-    </div>
-
-    <!-- OPTION 3: Karat / Alloy Mix Table (Note Match) -->
+    <!-- OPTION 2: Karat / Alloy Mix Table -->
     <div id="karatChartTab" class="tab-content">
       <div class="card card-tola" style="max-width: 600px; margin: 0 auto;">
         <div class="card-header">
@@ -524,20 +479,6 @@
 
     tolaInput.addEventListener('input', convertTolaToGram);
     gramInput.addEventListener('input', convertGramToTola);
-
-    // Purity Logic
-    const purityWeightInput = document.getElementById('purityWeightInput');
-    const purityKaratSelect = document.getElementById('purityKaratSelect');
-    const pureGoldResult = document.getElementById('pureGoldResult');
-
-    function calculatePurity() {
-      const weight = parseFloat(purityWeightInput.value);
-      const karat = parseFloat(purityKaratSelect.value);
-
-      pureGoldResult.textContent = (isNaN(weight) || weight <= 0) ? '0.000' : (weight * (karat / 24)).toFixed(3);
-    }
-
-    purityWeightInput.addEventListener('input', calculatePurity);
 
     // Karat Chart Dynamic Table Generator
     function updateChartTable() {
