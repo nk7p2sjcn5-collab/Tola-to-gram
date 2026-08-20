@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tola Gram Converter</title>
+  <title>Gold Calculator Suite</title>
   <style>
     :root {
       /* Tola section colors */
@@ -35,19 +35,64 @@
     body {
       background-color: #f5f2eb;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
       min-height: 100vh;
       padding: 20px;
     }
 
+    /* Main Container */
+    .app-container {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    /* Top Tab Navigation Buttons */
+    .nav-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 14px 16px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border: 1.5px solid #dcd3be;
+      background-color: #ffffff;
+      color: #666;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .tab-btn.active {
+      background-color: var(--tola-header-bg);
+      color: #ffffff;
+      border-color: var(--tola-header-bg);
+      box-shadow: 0 4px 12px rgba(217, 147, 43, 0.25);
+    }
+
+    /* View Views Container */
+    .tab-content {
+      display: none;
+      width: 100%;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Converter 1 Layout */
     .converter-wrapper {
       position: relative;
       display: flex;
       flex-direction: row;
       gap: 24px;
       align-items: center;
-      max-width: 900px;
       width: 100%;
     }
 
@@ -140,7 +185,7 @@
     .card-tola .input-box { border: 1px solid #e0d8c3; }
     .card-gram .input-box { border: 1px solid #cadbcf; }
 
-    .input-box input {
+    .input-box input, .input-box select {
       flex: 1;
       border: none;
       padding: 12px 14px;
@@ -243,79 +288,138 @@
 </head>
 <body>
 
-  <div class="converter-wrapper">
+  <div class="app-container">
     
-    <!-- Left Section: Tola to Gram -->
-    <div class="card card-tola">
-      <div class="card-header">
-        <div class="icon-badge">
-          <!-- Scale Icon -->
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h18"/></svg>
-        </div>
-        <h2 class="card-title">तोला बाट ग्राम</h2>
-      </div>
-
-      <div class="field-group">
-        <label class="label">तोलामा मूल्य प्रविष्ट गर्नुहोस्</label>
-        <div class="input-box">
-          <input type="number" id="tolaInput" placeholder="उदाहरण: 1" step="any" min="0">
-          <div class="unit-select">
-            तोला <span>&#9662;</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <label class="label">ग्राममा परिणाम</label>
-        <div class="result-box">
-          <span id="gramResult">0.000</span>
-          <span class="result-unit">ग्राम</span>
-        </div>
-      </div>
-
-      <button class="btn" onclick="convertTolaToGram()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
-        कन्भर्ट गर्नुहोस्
+    <!-- Option Selector Buttons -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tolaGramTab', this)">
+        ⚖️ तोला - ग्राम कन्भर्टर
+      </button>
+      <button class="tab-btn" onclick="switchTab('purityTab', this)">
+        ✨ प्युरिटी (शुद्धता) क्याल्कुलेटर
       </button>
     </div>
 
-    <!-- Center Swap Icon -->
-    <div class="swap-divider">
-      &#8646;
+    <!-- OPTION 1: Tola Gram Calculator -->
+    <div id="tolaGramTab" class="tab-content active">
+      <div class="converter-wrapper">
+        
+        <!-- Left Section: Tola to Gram -->
+        <div class="card card-tola">
+          <div class="card-header">
+            <div class="icon-badge">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h18"/></svg>
+            </div>
+            <h2 class="card-title">तोला बाट ग्राम</h2>
+          </div>
+
+          <div class="field-group">
+            <label class="label">तोलामा मूल्य प्रविष्ट गर्नुहोस्</label>
+            <div class="input-box">
+              <input type="number" id="tolaInput" placeholder="उदाहरण: 1" step="any" min="0">
+              <div class="unit-select">
+                तोला <span>&#9662;</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="label">ग्राममा परिणाम</label>
+            <div class="result-box">
+              <span id="gramResult">0.000</span>
+              <span class="result-unit">ग्राम</span>
+            </div>
+          </div>
+
+          <button class="btn" onclick="convertTolaToGram()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
+            कन्भर्ट गर्नुहोस्
+          </button>
+        </div>
+
+        <!-- Center Swap Icon -->
+        <div class="swap-divider">
+          &#8646;
+        </div>
+
+        <!-- Right Section: Gram to Tola -->
+        <div class="card card-gram">
+          <div class="card-header">
+            <div class="icon-badge">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.9 2.6l2 9A2 2 0 0 0 8.5 21h7a2 2 0 0 0 1.9-1.4l2-9A2 2 0 0 0 17.5 8z"/></svg>
+            </div>
+            <h2 class="card-title">ग्राम बाट तोला</h2>
+          </div>
+
+          <div class="field-group">
+            <label class="label">ग्राममा मूल्य प्रविष्ट गर्नुहोस्</label>
+            <div class="input-box">
+              <input type="number" id="gramInput" placeholder="उदाहरण: 10" step="any" min="0">
+              <div class="unit-select">
+                ग्राम <span>&#9662;</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="label">तोलामा परिणाम</label>
+            <div class="result-box">
+              <span id="tolaResult">0.000</span>
+              <span class="result-unit">तोलामा</span>
+            </div>
+          </div>
+
+          <button class="btn" onclick="convertGramToTola()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
+            कन्भर्ट गर्नुहोस्
+          </button>
+        </div>
+
+      </div>
     </div>
 
-    <!-- Right Section: Gram to Tola -->
-    <div class="card card-gram">
-      <div class="card-header">
-        <div class="icon-badge">
-          <!-- Weight Icon -->
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.9 2.6l2 9A2 2 0 0 0 8.5 21h7a2 2 0 0 0 1.9-1.4l2-9A2 2 0 0 0 17.5 8z"/></svg>
+    <!-- OPTION 2: Purity Calculator Box -->
+    <div id="purityTab" class="tab-content">
+      <div class="card card-tola" style="max-width: 550px; margin: 0 auto;">
+        <div class="card-header">
+          <div class="icon-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <h2 class="card-title">सुनको शुद्धता (Purity) क्याल्कुलेटर</h2>
         </div>
-        <h2 class="card-title">ग्राम बाट तोला</h2>
-      </div>
 
-      <div class="field-group">
-        <label class="label">ग्राममा मूल्य प्रविष्ट गर्नुहोस्</label>
-        <div class="input-box">
-          <input type="number" id="gramInput" placeholder="उदाहरण: 10" step="any" min="0">
-          <div class="unit-select">
-            ग्राम <span>&#9662;</span>
+        <div class="field-group">
+          <label class="label">कुल तौल (Total Weight in Grams/Tola)</label>
+          <div class="input-box">
+            <input type="number" id="purityWeightInput" placeholder="उदाहरण: 10" step="any" min="0">
           </div>
         </div>
-      </div>
 
-      <div class="field-group">
-        <label class="label">तोलामा परिणाम</label>
-        <div class="result-box">
-          <span id="tolaResult">0.000</span>
-          <span class="result-unit">तोलामा</span>
+        <div class="field-group">
+          <label class="label">क्यारेट छान्नुहोस् (Select Karat)</label>
+          <div class="input-box">
+            <select id="purityKaratSelect" onchange="calculatePurity()">
+              <option value="24">24K (99.9% Purity)</option>
+              <option value="22" selected>22K (91.6% Purity)</option>
+              <option value="21">21K (87.5% Purity)</option>
+              <option value="18">18K (75.0% Purity)</option>
+              <option value="14">14K (58.3% Purity)</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <button class="btn" onclick="convertGramToTola()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
-        कन्भर्ट गर्नुहोस्
-      </button>
+        <div class="field-group">
+          <label class="label">शुद्ध सुनको तौल (Pure 24K Gold)</label>
+          <div class="result-box">
+            <span id="pureGoldResult">0.000</span>
+            <span class="result-unit">तौल</span>
+          </div>
+        </div>
+
+        <button class="btn" onclick="calculatePurity()">
+          हिसाब गर्नुहोस्
+        </button>
+      </div>
     </div>
 
   </div>
@@ -323,6 +427,16 @@
   <script>
     const CONVERSION_RATE = 11.664; // 1 tola = 11.664 grams
 
+    // Tab Switching Logic
+    function switchTab(tabId, btnElement) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      btnElement.classList.add('active');
+    }
+
+    // Tola-Gram Logic
     const tolaInput = document.getElementById('tolaInput');
     const gramResult = document.getElementById('gramResult');
     const gramInput = document.getElementById('gramInput');
@@ -346,9 +460,27 @@
       }
     }
 
-    // Real-time dynamic updates on typing
     tolaInput.addEventListener('input', convertTolaToGram);
     gramInput.addEventListener('input', convertGramToTola);
+
+    // Purity Logic
+    const purityWeightInput = document.getElementById('purityWeightInput');
+    const purityKaratSelect = document.getElementById('purityKaratSelect');
+    const pureGoldResult = document.getElementById('pureGoldResult');
+
+    function calculatePurity() {
+      const weight = parseFloat(purityWeightInput.value);
+      const karat = parseFloat(purityKaratSelect.value);
+
+      if (isNaN(weight) || weight <= 0) {
+        pureGoldResult.textContent = '0.000';
+      } else {
+        const pureWeight = weight * (karat / 24);
+        pureGoldResult.textContent = pureWeight.toFixed(3);
+      }
+    }
+
+    purityWeightInput.addEventListener('input', calculatePurity);
   </script>
 </body>
 </html>
