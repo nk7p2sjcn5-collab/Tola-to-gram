@@ -382,7 +382,7 @@
             <label class="label">तोलामा परिणाम</label>
             <div class="result-box">
               <span id="tolaResult">0.000</span>
-              <span class="result-unit">तोलामा</span>
+              <span class="result-unit">तोला</span>
             </div>
           </div>
 
@@ -421,17 +421,17 @@
             <tr>
               <td>24K</td>
               <td id="pg-24k">-</td>
-              <td>0</td>
+              <td>0.000</td>
             </tr>
             <tr>
               <td>23K</td>
               <td id="pg-23k">1</td>
-              <td id="mix-23k">0.03</td>
+              <td id="mix-23k">0.043</td>
             </tr>
             <tr>
               <td>22K</td>
               <td id="pg-22k">1</td>
-              <td id="mix-22k">0.07</td>
+              <td id="mix-22k">0.091</td>
             </tr>
             <tr>
               <td>18K</td>
@@ -441,7 +441,7 @@
             <tr>
               <td>14K</td>
               <td id="pg-14k">1</td>
-              <td id="mix-14k">0.4167</td>
+              <td id="mix-14k">0.714</td>
             </tr>
           </tbody>
         </table>
@@ -480,7 +480,7 @@
     tolaInput.addEventListener('input', convertTolaToGram);
     gramInput.addEventListener('input', convertGramToTola);
 
-    // Karat Chart Dynamic Table Generator
+    // Karat Chart Dynamic Table Generator (Calculated based on standard Karat purity ratios)
     function updateChartTable() {
       const base = parseFloat(document.getElementById('chartBaseWeight').value) || 0;
       
@@ -490,10 +490,11 @@
       document.getElementById('pg-18k').textContent = base ? base.toFixed(3) : '-';
       document.getElementById('pg-14k').textContent = base ? base.toFixed(3) : '-';
 
-      document.getElementById('mix-23k').textContent = (base * 0.03).toFixed(3);
-      document.getElementById('mix-22k').textContent = (base * 0.07).toFixed(3);
-      document.getElementById('mix-18k').textContent = (base * 0.333).toFixed(3);
-      document.getElementById('mix-14k').textContent = (base * 0.4167).toFixed(4);
+      // Alloy ratios needed when adding copper/alloy to pure base gold:
+      document.getElementById('mix-23k').textContent = (base * (1 / (23 / 24) - 1)).toFixed(3);
+      document.getElementById('mix-22k').textContent = (base * (1 / (22 / 24) - 1)).toFixed(3);
+      document.getElementById('mix-18k').textContent = (base * (1 / (18 / 24) - 1)).toFixed(3);
+      document.getElementById('mix-14k').textContent = (base * (1 / (14 / 24) - 1)).toFixed(3);
     }
 
     // Initialize Table Values
