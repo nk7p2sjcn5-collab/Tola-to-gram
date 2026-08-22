@@ -297,6 +297,84 @@
       color: var(--tola-header-bg);
     }
 
+    /* --- Karat Converter Custom UI Styles --- */
+    .kc-container {
+      background-color: #ffffff;
+      border: 2px solid #202b36;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .kc-grid {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      position: relative;
+    }
+
+    .kc-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .kc-divider {
+      width: 2px;
+      background-color: #202b36;
+      align-self: stretch;
+      margin: 0 10px;
+    }
+
+    .kc-input-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .kc-input {
+      flex: 1;
+      border: 2px solid #202b36;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      outline: none;
+      background: #ffffff;
+      width: 100%;
+    }
+
+    .kc-select {
+      border: 2px solid #202b36;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      background-color: #f8f9fa;
+      cursor: pointer;
+      outline: none;
+      min-width: 80px;
+    }
+
+    .kc-details {
+      font-size: 0.95rem;
+      color: #333333;
+      line-height: 1.6;
+    }
+
+    .kc-result-banner {
+      margin-top: 20px;
+      background-color: #fdf5d8;
+      border: 2px solid #e0ab39;
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #9c5800;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
       .converter-wrapper {
@@ -312,6 +390,14 @@
       .nav-tabs {
         flex-direction: column;
       }
+      .kc-grid {
+        flex-direction: column;
+      }
+      .kc-divider {
+        width: 100%;
+        height: 2px;
+        margin: 10px 0;
+      }
     }
   </style>
 </head>
@@ -325,7 +411,10 @@
         ⚖️ तोला - ग्राम कन्भर्टर
       </button>
       <button class="tab-btn" onclick="switchTab('karatChartTab', this)">
-        📋 क्यारेट चार्ट (Karat Chart)
+        📋 Karat Chart
+      </button>
+      <button class="tab-btn" onclick="switchTab('karatConverterTab', this)">
+        Karat Converter
       </button>
     </div>
 
@@ -448,6 +537,56 @@
       </div>
     </div>
 
+    <!-- OPTION 3: Interactive Karat Converter -->
+    <div id="karatConverterTab" class="tab-content">
+      <div class="kc-container">
+        <div class="kc-grid">
+          <!-- Left Input Column -->
+          <div class="kc-col">
+            <div class="kc-input-row">
+              <input type="number" id="kcWeight" class="kc-input" value="1.5" step="any" min="0" oninput="calculateKaratConversion()">
+              <select id="kcSourceKarat" class="kc-select" onchange="calculateKaratConversion()">
+                <option value="24">24K</option>
+                <option value="23">23K</option>
+                <option value="22" selected>22K</option>
+                <option value="18">18K</option>
+                <option value="14">14K</option>
+              </select>
+            </div>
+            <div class="kc-details">
+              Pure Gold: <strong id="kcSrcPure">1.3750 g</strong><br>
+              Base Alloy: <strong id="kcSrcAlloy">0.1250 g</strong>
+            </div>
+          </div>
+
+          <div class="kc-divider"></div>
+
+          <!-- Right Output Column -->
+          <div class="kc-col">
+            <div class="kc-input-row">
+              <input type="text" id="kcTargetWeight" class="kc-input" value="1.8333" readonly>
+              <select id="kcTargetKarat" class="kc-select" onchange="calculateKaratConversion()">
+                <option value="24">24K</option>
+                <option value="23">23K</option>
+                <option value="22">22K</option>
+                <option value="18" selected>18K</option>
+                <option value="14">14K</option>
+              </select>
+            </div>
+            <div class="kc-details">
+              Pure Gold: <strong id="kcTgtPure">1.3750 g</strong><br>
+              Total Alloy: <strong id="kcTgtAlloy">0.4583 g</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alloy to Add Output Banner -->
+        <div class="kc-result-banner" id="kcBanner">
+          Alloy to Add (तामा): +0.3333 g
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -480,7 +619,7 @@
     tolaInput.addEventListener('input', convertTolaToGram);
     gramInput.addEventListener('input', convertGramToTola);
 
-    // Karat Chart Dynamic Table Generator (Calculated based on standard Karat purity ratios)
+    // Karat Chart Dynamic Table Generator
     function updateChartTable() {
       const base = parseFloat(document.getElementById('chartBaseWeight').value) || 0;
       
@@ -497,8 +636,46 @@
       document.getElementById('mix-14k').textContent = (base * (1 / (14 / 24) - 1)).toFixed(3);
     }
 
-    // Initialize Table Values
+    // Dynamic Karat Converter Calculations
+    function calculateKaratConversion() {
+      const weight = parseFloat(document.getElementById('kcWeight').value) || 0;
+      const srcKarat = parseFloat(document.getElementById('kcSourceKarat').value);
+      const tgtKarat = parseFloat(document.getElementById('kcTargetKarat').value);
+
+      const srcPurity = srcKarat / 24;
+      const tgtPurity = tgtKarat / 24;
+
+      const pureGold = weight * srcPurity;
+      const baseAlloy = weight - pureGold;
+
+      const targetWeight = pureGold / tgtPurity;
+      const totalAlloy = targetWeight - pureGold;
+      const alloyToAdd = targetWeight - weight;
+
+      document.getElementById('kcSrcPure').textContent = pureGold.toFixed(4) + ' g';
+      document.getElementById('kcSrcAlloy').textContent = baseAlloy.toFixed(4) + ' g';
+
+      document.getElementById('kcTargetWeight').value = targetWeight.toFixed(4);
+      document.getElementById('kcTgtPure').textContent = pureGold.toFixed(4) + ' g';
+      document.getElementById('kcTgtAlloy').textContent = totalAlloy.toFixed(4) + ' g';
+
+      const banner = document.getElementById('kcBanner');
+      if (alloyToAdd >= 0) {
+        banner.textContent = `Alloy to Add (तामा): +${alloyToAdd.toFixed(4)} g`;
+        banner.style.color = "#9c5800";
+        banner.style.backgroundColor = "#fdf5d8";
+        banner.style.borderColor = "#e0ab39";
+      } else {
+        banner.textContent = `Pure Gold Required to Increase Karat: +${(Math.abs(alloyToAdd) * (tgtKarat / (24 - tgtKarat))).toFixed(4)} g`;
+        banner.style.color = "#856404";
+        banner.style.backgroundColor = "#fff3cd";
+        banner.style.borderColor = "#ffeba1";
+      }
+    }
+
+    // Initialize Values
     updateChartTable();
+    calculateKaratConversion();
   </script>
 </body>
 </html>
