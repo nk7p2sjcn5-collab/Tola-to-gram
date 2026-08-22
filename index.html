@@ -515,7 +515,7 @@
             <tr>
               <td>23K</td>
               <td id="pg-23k">1</td>
-              <td id="mix-23k">0.043</td>
+              <td id="mix-23k">0.031</td>
             </tr>
             <tr>
               <td>22K</td>
@@ -544,18 +544,18 @@
           <!-- Left Input Column -->
           <div class="kc-col">
             <div class="kc-input-row">
-              <input type="number" id="kcWeight" class="kc-input" value="1.5" step="any" min="0" oninput="calculateKaratConversion()">
+              <input type="number" id="kcWeight" class="kc-input" value="1" step="any" min="0" oninput="calculateKaratConversion()">
               <select id="kcSourceKarat" class="kc-select" onchange="calculateKaratConversion()">
                 <option value="24">24K</option>
-                <option value="23">23K</option>
-                <option value="22" selected>22K</option>
+                <option value="23" selected>23K</option>
+                <option value="22">22K</option>
                 <option value="18">18K</option>
                 <option value="14">14K</option>
               </select>
             </div>
             <div class="kc-details">
-              Pure Gold: <strong id="kcSrcPure">1.3750 g</strong><br>
-              Base Alloy: <strong id="kcSrcAlloy">0.1250 g</strong>
+              Pure Gold: <strong id="kcSrcPure">0.970 g</strong><br>
+              Base Alloy: <strong id="kcSrcAlloy">0.030 g</strong>
             </div>
           </div>
 
@@ -564,7 +564,7 @@
           <!-- Right Output Column -->
           <div class="kc-col">
             <div class="kc-input-row">
-              <input type="text" id="kcTargetWeight" class="kc-input" value="1.8333" readonly>
+              <input type="text" id="kcTargetWeight" class="kc-input" value="1.293" readonly>
               <select id="kcTargetKarat" class="kc-select" onchange="calculateKaratConversion()">
                 <option value="24">24K</option>
                 <option value="23">23K</option>
@@ -574,15 +574,15 @@
               </select>
             </div>
             <div class="kc-details">
-              Pure Gold: <strong id="kcTgtPure">1.3750 g</strong><br>
-              Total Alloy: <strong id="kcTgtAlloy">0.4583 g</strong>
+              Pure Gold: <strong id="kcTgtPure">0.970 g</strong><br>
+              Total Alloy: <strong id="kcTgtAlloy">0.323 g</strong>
             </div>
           </div>
         </div>
 
         <!-- Alloy to Add Output Banner -->
         <div class="kc-result-banner" id="kcBanner">
-          Alloy to Add (तामा): +0.3333 g
+          Alloy to Add (तामा): +0.293 g
         </div>
       </div>
     </div>
@@ -591,6 +591,15 @@
 
   <script>
     const CONVERSION_RATE = 11.664;
+
+    // Custom Karat Purity Map (Setting 23K to exact 0.97 ratio)
+    const KARAT_PURITIES = {
+      24: 1.0,
+      23: 0.97,
+      22: 22 / 24,
+      18: 18 / 24,
+      14: 14 / 24
+    };
 
     function switchTab(tabId, btnElement) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -629,11 +638,11 @@
       document.getElementById('pg-18k').textContent = base ? base.toFixed(3) : '-';
       document.getElementById('pg-14k').textContent = base ? base.toFixed(3) : '-';
 
-      // Alloy ratios needed when adding copper/alloy to pure base gold:
-      document.getElementById('mix-23k').textContent = (base * (1 / (23 / 24) - 1)).toFixed(3);
-      document.getElementById('mix-22k').textContent = (base * (1 / (22 / 24) - 1)).toFixed(3);
-      document.getElementById('mix-18k').textContent = (base * (1 / (18 / 24) - 1)).toFixed(3);
-      document.getElementById('mix-14k').textContent = (base * (1 / (14 / 24) - 1)).toFixed(3);
+      // Alloy ratios needed when adding copper/alloy to pure base gold
+      document.getElementById('mix-23k').textContent = (base * (1 / KARAT_PURITIES[23] - 1)).toFixed(3);
+      document.getElementById('mix-22k').textContent = (base * (1 / KARAT_PURITIES[22] - 1)).toFixed(3);
+      document.getElementById('mix-18k').textContent = (base * (1 / KARAT_PURITIES[18] - 1)).toFixed(3);
+      document.getElementById('mix-14k').textContent = (base * (1 / KARAT_PURITIES[14] - 1)).toFixed(3);
     }
 
     // Dynamic Karat Converter Calculations
@@ -642,8 +651,8 @@
       const srcKarat = parseFloat(document.getElementById('kcSourceKarat').value);
       const tgtKarat = parseFloat(document.getElementById('kcTargetKarat').value);
 
-      const srcPurity = srcKarat / 24;
-      const tgtPurity = tgtKarat / 24;
+      const srcPurity = KARAT_PURITIES[srcKarat];
+      const tgtPurity = KARAT_PURITIES[tgtKarat];
 
       const pureGold = weight * srcPurity;
       const baseAlloy = weight - pureGold;
@@ -652,21 +661,22 @@
       const totalAlloy = targetWeight - pureGold;
       const alloyToAdd = targetWeight - weight;
 
-      document.getElementById('kcSrcPure').textContent = pureGold.toFixed(4) + ' g';
-      document.getElementById('kcSrcAlloy').textContent = baseAlloy.toFixed(4) + ' g';
+      document.getElementById('kcSrcPure').textContent = pureGold.toFixed(3) + ' g';
+      document.getElementById('kcSrcAlloy').textContent = baseAlloy.toFixed(3) + ' g';
 
-      document.getElementById('kcTargetWeight').value = targetWeight.toFixed(4);
-      document.getElementById('kcTgtPure').textContent = pureGold.toFixed(4) + ' g';
-      document.getElementById('kcTgtAlloy').textContent = totalAlloy.toFixed(4) + ' g';
+      document.getElementById('kcTargetWeight').value = targetWeight.toFixed(3);
+      document.getElementById('kcTgtPure').textContent = pureGold.toFixed(3) + ' g';
+      document.getElementById('kcTgtAlloy').textContent = totalAlloy.toFixed(3) + ' g';
 
       const banner = document.getElementById('kcBanner');
       if (alloyToAdd >= 0) {
-        banner.textContent = `Alloy to Add (तामा): +${alloyToAdd.toFixed(4)} g`;
+        banner.textContent = `Alloy to Add (तामा): +${alloyToAdd.toFixed(3)} g`;
         banner.style.color = "#9c5800";
         banner.style.backgroundColor = "#fdf5d8";
         banner.style.borderColor = "#e0ab39";
       } else {
-        banner.textContent = `Pure Gold Required to Increase Karat: +${(Math.abs(alloyToAdd) * (tgtKarat / (24 - tgtKarat))).toFixed(4)} g`;
+        const pureGoldNeeded = Math.abs(alloyToAdd) * (tgtPurity / (1 - tgtPurity));
+        banner.textContent = `Pure Gold Required to Increase Karat: +${pureGoldNeeded.toFixed(3)} g`;
         banner.style.color = "#856404";
         banner.style.backgroundColor = "#fff3cd";
         banner.style.borderColor = "#ffeba1";
